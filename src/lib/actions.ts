@@ -79,10 +79,11 @@ export async function register(
     // 유저 생성
     const user = await prisma.user.create({
         data: {
+            ssafyId,
             bojHandle,
             campus,
             classNum,
-            name: name || null,
+            name: name || bojHandle,
             tier: solvedAcUser.tier,
             rating: solvedAcUser.rating,
             solvedCount: solvedAcUser.solvedCount,
@@ -104,7 +105,7 @@ export async function register(
                 userId: user.id,
                 type: badge.type,
             })),
-            skipDuplicates: true,
+
         });
     }
 

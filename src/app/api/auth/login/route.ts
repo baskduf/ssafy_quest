@@ -17,6 +17,14 @@ export async function POST(request: Request) {
             );
         }
 
+        // 기본 유효성 검사 (SSAFY 서버 부하 방지용)
+        if (typeof ssafyId !== 'string' || ssafyId.length < 2 || typeof ssafyPwd !== 'string' || ssafyPwd.length < 4) {
+            return NextResponse.json(
+                { success: false, message: "올바른 형식의 아이디와 비밀번호를 입력해주세요." },
+                { status: 400 }
+            );
+        }
+
         // SSAFY 로그인 검증
         const ssafyResult = await verifySsafyLogin(ssafyId, ssafyPwd);
 
