@@ -30,7 +30,9 @@ export default async function ProfilePage({ params }: Props) {
             const newTotalPoint = calculateTotalPoint(
                 freshData.tier,
                 freshData.solvedCount,
-                freshData.maxStreak
+                freshData.maxStreak,
+                user.initialTier,
+                user.initialSolvedCount
             );
 
             user = await prisma.user.update({

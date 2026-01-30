@@ -41,11 +41,13 @@ export async function POST(request: Request) {
             );
         }
 
-        // 점수 계산
+        // 점수 계산 (가입 직후는 성장분이 0이므로 0점)
         const totalPoint = calculateTotalPoint(
             solvedAcUser.tier,
             solvedAcUser.solvedCount,
-            solvedAcUser.maxStreak
+            solvedAcUser.maxStreak,
+            solvedAcUser.tier,
+            solvedAcUser.solvedCount
         );
 
         // 유저 생성
@@ -60,6 +62,11 @@ export async function POST(request: Request) {
                 rating: solvedAcUser.rating,
                 solvedCount: solvedAcUser.solvedCount,
                 maxStreak: solvedAcUser.maxStreak,
+
+                // 시즌 초기값
+                initialTier: solvedAcUser.tier,
+                initialSolvedCount: solvedAcUser.solvedCount,
+
                 profileImage: solvedAcUser.profileImageUrl,
                 bio: solvedAcUser.bio,
                 totalPoint,

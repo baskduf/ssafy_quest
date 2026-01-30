@@ -37,12 +37,31 @@ model User {
   profileImage  String?
   bio           String?
   
+  // Season Data (To calculate growth)
+  initialSolvedCount Int       @default(0) // 시즌 시작 시점의 문제 수
+  initialTier        Int       @default(0) // 시즌 시작 시점의 티어 (선택 사항)
+  
   // 메타데이터
   lastUpdatedAt DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
   badges        Badge[]
+  seasonHistory SeasonHistory[]
+}
+
+model SeasonHistory {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seasonName      String   // e.g., "2024-02"
+  finalSolvedCount Int     // 시즌 종료 시점의 누적 문제 수
+  finalTier       Int      // 시즌 종료 시점의 티어
+  earnedPoint     Int      // 해당 시즌에 획득한 포인트
+  rank            Int?     // 시즌 최종 순위
+  createdAt       DateTime @default(now())
+
+  @@unique([userId, seasonName])
 }
 
 model Badge {

@@ -69,11 +69,13 @@ export async function register(
         return { success: false, message: "이미 등록된 백준 아이디입니다." };
     }
 
-    // 점수 계산
+    // 점수 계산 (가입 직후는 성장분이 0이므로 0점)
     const totalPoint = calculateTotalPoint(
         solvedAcUser.tier,
         solvedAcUser.solvedCount,
-        solvedAcUser.maxStreak
+        solvedAcUser.maxStreak,
+        solvedAcUser.tier,        // initialTier
+        solvedAcUser.solvedCount  // initialSolvedCount
     );
 
     // 유저 생성
@@ -88,6 +90,11 @@ export async function register(
             rating: solvedAcUser.rating,
             solvedCount: solvedAcUser.solvedCount,
             maxStreak: solvedAcUser.maxStreak,
+
+            // 시즌 초기값 설정 (현재 상태를 기준점으로)
+            initialTier: solvedAcUser.tier,
+            initialSolvedCount: solvedAcUser.solvedCount,
+
             profileImage: solvedAcUser.profileImageUrl,
             bio: solvedAcUser.bio,
             totalPoint,

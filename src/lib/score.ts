@@ -51,13 +51,24 @@ export function getTierScore(tier: number): number {
 export function calculateTotalPoint(
     tier: number,
     solvedCount: number,
-    maxStreak: number
+    maxStreak: number,
+    initialTier: number = 0,
+    initialSolvedCount: number = 0
 ): number {
-    const tierScore = getTierScore(tier);
-    const solvedBonus = solvedCount * 5;
-    const streakBonus = maxStreak * 10;
+    const currentTierScore = getTierScore(tier);
+    const initialTierScore = getTierScore(initialTier);
 
-    return tierScore + solvedBonus + streakBonus;
+    // 티어 성장 점수 (하락 시 0)
+    const tierGrowth = Math.max(0, currentTierScore - initialTierScore);
+
+    // 문제 풀이 성장 점수 (하락 시 0)
+    const solvedGrowth = Math.max(0, solvedCount - initialSolvedCount);
+    const solvedBonus = solvedGrowth * 50; // 유저 요청: 활동 점수 가중치 50
+
+    // 스트릭 점수는 시즌제에서 제외 (과거 스트릭의 영향력 제거)
+    // const streakBonus = maxStreak * 10; 
+
+    return tierGrowth + solvedBonus;
 }
 
 /**
