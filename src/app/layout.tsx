@@ -4,6 +4,7 @@ import Image from "next/image";
 import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import { sessionOptions, SessionData } from "@/lib/session";
+import { Footer } from "@/components/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export default async function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
       </head>
-      <body>
+      <body className="flex flex-col min-h-screen">
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E2E8F0]">
           <div className="max-w-4xl mx-auto px-4">
@@ -82,7 +83,8 @@ export default async function RootLayout({
         </nav>
 
         {/* Main Content */}
-        <main className="pt-14">{children}</main>
+        <main className="pt-14 flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

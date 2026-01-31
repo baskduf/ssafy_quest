@@ -7,6 +7,8 @@ import { ClassRankingTable, ClassStat } from "@/components/ranking/class-ranking
 import { RandomProblems } from "@/components/random-problems";
 import { MyClassButton } from "@/components/ranking/my-class-button";
 
+import { Notice } from "@/components/notice";
+
 export const revalidate = 3600;
 
 interface SearchParams {
@@ -78,6 +80,7 @@ export default async function HomePage({
             </div>
           </div>
 
+          <Notice />
           <RandomProblems />
         </div>
       </section >

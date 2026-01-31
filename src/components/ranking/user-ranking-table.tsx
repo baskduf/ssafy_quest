@@ -69,10 +69,10 @@ export function UserRankingTable({ users }: UserRankingTableProps) {
                         <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[12%]">
                             순위
                         </TableHead>
-                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[22%]">
+                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[18%]">
                             이름
                         </TableHead>
-                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[22%]">
+                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[26%]">
                             티어
                         </TableHead>
                         <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[19%]">
@@ -103,7 +103,7 @@ export function UserRankingTable({ users }: UserRankingTableProps) {
                                         previousRank={user.previousRank}
                                     />
                                 </TableCell>
-                                <TableCell className="py-2.5 px-2 whitespace-nowrap w-[22%] overflow-hidden">
+                                <TableCell className="py-2.5 px-2 whitespace-nowrap w-[18%] overflow-hidden">
                                     <Link
                                         href={`/profile/${user.bojHandle}`}
                                         className="hover:text-[#3282F6] block truncate"

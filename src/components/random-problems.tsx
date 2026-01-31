@@ -30,7 +30,7 @@ export async function RandomProblems() {
     if (problems.length === 0) return null;
 
     return (
-        <div className="max-w-4xl mx-auto px-4 w-full mt-12 mb-10">
+        <div className="max-w-4xl mx-auto px-4 w-full mt-12 mb-6">
             <h3 className="text-sm font-bold text-[#4A4A4A] mb-3 flex items-center gap-2">
                 🎲 오늘의 도전 문제
                 <span className="text-xs font-normal text-[#9CA3AF] bg-gray-100 px-2 py-0.5 rounded-full">

@@ -1,81 +1,65 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL") // Uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // Uses direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  ssafyId       String    @unique  // SSAFY 로그인 ID (이메일)
-  bojHandle     String    @unique  // 백준 아이디
-  campus        String              // 서울, 대전, 구미, 광주, 부울경
-  classNum      Int                 // 반 번호
-  name          String              // 이름 (필수)
-  
-  // Solved.ac 데이터
-  tier          Int       @default(0)
-  rating        Int       @default(0)
-  solvedCount   Int       @default(0)
-  maxStreak     Int       @default(0)
-  currentStreak Int       @default(0)
-  
-  // 계산된 점수
-  totalPoint    Int       @default(0)
-  
-  // 순위 변동 추적
-  previousRank  Int?      // 이전 순위 (어제 기준)
-  rankUpdatedAt DateTime? // 마지막 순위 갱신 시점
-  
-  // 프로필 이미지 (Solved.ac에서)
-  profileImage  String?
-  bio           String?
-  
-  // Season Data (To calculate growth)
-  initialSolvedCount Int       @default(0) // 시즌 시작 시점의 문제 수
-  initialTier        Int       @default(0) // 시즌 시작 시점의 티어 (선택 사항)
-  
-  // 메타데이터
-  lastUpdatedAt DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  badges        Badge[]
-  seasonHistory SeasonHistory[]
+  id                 String          @id @default(cuid())
+  ssafyId            String          @unique
+  bojHandle          String          @unique
+  campus             String
+  classNum           Int
+  name               String
+  tier               Int             @default(0)
+  rating             Int             @default(0)
+  solvedCount        Int             @default(0)
+  maxStreak          Int             @default(0)
+  currentStreak      Int             @default(0)
+  totalPoint         Int             @default(0)
+  previousRank       Int?
+  rankUpdatedAt      DateTime?
+  profileImage       String?
+  bio                String?
+  lastUpdatedAt      DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  initialSolvedCount Int             @default(0)
+  initialTier        Int             @default(0)
+  badges             Badge[]
+  seasonHistory      SeasonHistory[]
 }
 
 model SeasonHistory {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  seasonName      String   // e.g., "2024-02"
-  finalSolvedCount Int     // 시즌 종료 시점의 누적 문제 수
-  finalTier       Int      // 시즌 종료 시점의 티어
-  earnedPoint     Int      // 해당 시즌에 획득한 포인트
-  rank            Int?     // 시즌 최종 순위
-  createdAt       DateTime @default(now())
+  id               String   @id @default(cuid())
+  userId           String
+  seasonName       String
+  finalSolvedCount Int
+  finalTier        Int
+  earnedPoint      Int
+  rank             Int?
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, seasonName])
 }
 
 model Badge {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type        String   // STREAK_7, STREAK_30, STREAK_100, SILVER_TIER, GOLD_TIER, etc.
-  awardedAt   DateTime @default(now())
-  
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  awardedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, type])
 }
 
 model DailyProblem {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  problems  String   // JSON stringified (SQLite does not support JSON type natively in Prisma)
+  problems  String
 }

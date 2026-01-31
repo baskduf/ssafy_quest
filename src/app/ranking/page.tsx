@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { UserRankingTable, User } from "@/components/ranking/user-ranking-table";
 import { RandomProblems } from "@/components/random-problems";
+import { Notice } from "@/components/notice";
 import { MyClassButton } from "@/components/ranking/my-class-button";
 
 export const revalidate = 3600;
@@ -81,6 +82,7 @@ export default async function RankingPage({
                         </div>
                     </div>
 
+                    <Notice />
                     <RandomProblems />
                 </div>
             </section>
