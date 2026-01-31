@@ -14,13 +14,40 @@ export interface ClassStat {
     totalPoint: number;
     memberCount: number;
     avgPoint: number;
+    previousRank?: number | null;
 }
 
-interface ClassRankingTableProps {
+export interface ClassRankingTableProps {
     statistics: ClassStat[];
+    myRankInfo?: ClassStat & { rank: number };
 }
 
-export function ClassRankingTable({ statistics }: ClassRankingTableProps) {
+function RankChange({
+    currentRank,
+    previousRank,
+}: {
+    currentRank: number;
+    previousRank?: number | null;
+}) {
+    if (previousRank === undefined || previousRank === null) {
+        return <span className="text-[10px] text-[#9CA3AF] ml-0.5">-</span>;
+    }
+
+    const diff = previousRank - currentRank;
+
+    if (diff > 0) {
+        return <span className="text-[10px] text-[#22C55E] ml-0.5">▲{diff}</span>;
+    } else if (diff < 0) {
+        return (
+            <span className="text-[10px] text-[#EF4444] ml-0.5">
+                ▼{Math.abs(diff)}
+            </span>
+        );
+    }
+    return <span className="text-[10px] text-[#9CA3AF] ml-0.5">-</span>;
+}
+
+export function ClassRankingTable({ statistics, myRankInfo }: ClassRankingTableProps) {
     if (statistics.length === 0) {
         return (
             <div className="bg-white rounded-lg border border-[#E2E8F0] p-8 text-center">
@@ -52,10 +79,47 @@ export function ClassRankingTable({ statistics }: ClassRankingTableProps) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
+                    {myRankInfo && (
+                        <TableRow
+                            className="bg-blue-50 border-b-2 border-blue-100 hover:bg-blue-50 transition-colors"
+                        >
+                            <TableCell className="py-2.5 px-2 whitespace-nowrap">
+                                <span className="font-semibold text-xs text-[#3282F6]">
+                                    {myRankInfo.rank}
+                                </span>
+                                <RankChange
+                                    currentRank={myRankInfo.rank}
+                                    previousRank={myRankInfo.previousRank}
+                                />
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 whitespace-nowrap">
+                                <Link
+                                    href={`/ranking?campus=${encodeURIComponent(
+                                        myRankInfo.campus
+                                    )}&classNum=${myRankInfo.classNum}`}
+                                    className="font-medium text-[#1A1A1A] hover:text-[#3282F6] text-xs sm:text-sm"
+                                >
+                                    <div className="font-medium text-[#1A1A1A] text-xs sm:text-sm">
+                                        {myRankInfo.campus} {myRankInfo.classNum}반
+                                    </div>
+                                    <div className="text-[10px] sm:text-xs text-[#9CA3AF]">내 반</div>
+                                </Link>
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 text-left text-[#4A4A4A] text-xs whitespace-nowrap">
+                                {myRankInfo.memberCount}명
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 text-left text-[#4A4A4A] text-xs whitespace-nowrap">
+                                {myRankInfo.avgPoint.toLocaleString()}
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 text-left font-semibold text-[#1A1A1A] text-xs sm:text-sm whitespace-nowrap">
+                                {myRankInfo.totalPoint.toLocaleString()}
+                            </TableCell>
+                        </TableRow>
+                    )}
                     {statistics.map((stat, index) => (
                         <TableRow
                             key={`${stat.campus}-${stat.classNum}`}
-                            className="border-t border-[#EEEEEE] hover:bg-[#F8F9FA] transition-colors"
+                            className={`border-t border-[#EEEEEE] hover:bg-[#F8F9FA] transition-colors ${myRankInfo?.campus === stat.campus && myRankInfo?.classNum === stat.classNum ? "bg-blue-50/30" : ""}`}
                         >
                             <TableCell className="py-2.5 px-2 whitespace-nowrap">
                                 <span
@@ -64,6 +128,10 @@ export function ClassRankingTable({ statistics }: ClassRankingTableProps) {
                                 >
                                     {index + 1}
                                 </span>
+                                <RankChange
+                                    currentRank={index + 1}
+                                    previousRank={stat.previousRank}
+                                />
                             </TableCell>
                             <TableCell className="py-2.5 px-2 whitespace-nowrap">
                                 <Link

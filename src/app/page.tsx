@@ -1,6 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { getIronSession } from "iron-session";
+import { sessionOptions, SessionData } from "@/lib/session";
 
 
 import { ClassRankingTable, ClassStat } from "@/components/ranking/class-ranking-table";
@@ -26,22 +29,57 @@ export default async function HomePage({
   const totalUsers = await prisma.user.count();
 
   // Get class rankings
-  const classStatsRaw = await prisma.user.groupBy({
-    by: ["campus", "classNum"],
-    _sum: { totalPoint: true },
-    _count: { id: true },
-    _avg: { totalPoint: true },
-    where: campus ? { campus } : undefined,
-    orderBy: { _sum: { totalPoint: "desc" } },
+  const [classStatsRaw, classRankingHistory] = await Promise.all([
+    prisma.user.groupBy({
+      by: ["campus", "classNum"],
+      _sum: { totalPoint: true },
+      _count: { id: true },
+      _avg: { totalPoint: true },
+      where: campus ? { campus } : undefined,
+      orderBy: { _sum: { totalPoint: "desc" } },
+    }),
+    prisma.classRanking.findMany({
+      where: params.campus ? { campus: params.campus } : undefined,
+    })
+  ]);
+
+  const classStats: ClassStat[] = classStatsRaw.map((stat, index) => {
+    // Find previous rank from history
+    const history = classRankingHistory.find(
+      (h) => h.campus === stat.campus && h.classNum === stat.classNum
+    );
+
+    return {
+      campus: stat.campus,
+      classNum: stat.classNum,
+      totalPoint: stat._sum.totalPoint || 0,
+      memberCount: stat._count.id,
+      avgPoint: Math.round(stat._avg.totalPoint || 0),
+      previousRank: history?.previousRank ?? null, // Add previousRank
+    };
   });
 
-  const classStats: ClassStat[] = classStatsRaw.map((stat) => ({
-    campus: stat.campus,
-    classNum: stat.classNum,
-    totalPoint: stat._sum.totalPoint || 0,
-    memberCount: stat._count.id,
-    avgPoint: Math.round(stat._avg.totalPoint || 0),
-  }));
+  // Get user session and determine my class rank
+  const cookieStore = await cookies();
+  const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
+
+  let myClassRank: (ClassStat & { rank: number }) | undefined;
+
+  if (session.isLoggedIn && session.campus && session.classNum) {
+    const userCampus = session.campus;
+    const userClassNum = session.classNum;
+
+    const myClassStatIndex = classStats.findIndex(
+      (s) => s.campus === userCampus && s.classNum === userClassNum
+    );
+
+    if (myClassStatIndex !== -1) {
+      myClassRank = {
+        ...classStats[myClassStatIndex],
+        rank: myClassStatIndex + 1,
+      };
+    }
+  }
 
   const campuses = ["서울", "대전", "구미", "광주", "부울경"];
 
@@ -137,7 +175,7 @@ export default async function HomePage({
 
       {/* Table */}
       < section className="max-w-4xl mx-auto px-3 sm:px-4 py-4" >
-        <ClassRankingTable statistics={classStats} />
+        <ClassRankingTable statistics={classStats} myRankInfo={myClassRank} />
       </section >
     </div >
   );

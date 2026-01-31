@@ -22,7 +22,27 @@ export function Notice() {
                             </p>
                         </div>
                     </div>
-                    {/* 추가 공지사항이 있다면 여기에 추가 */}
+                    {/* PWA 설치 안내 */}
+                    <div className="flex items-start gap-3 pt-3 border-t border-gray-100">
+                        <span className="text-xs font-bold text-[#3282F6] bg-[#EFF6FF] px-2 py-0.5 rounded mt-0.5 shrink-0">
+                            New
+                        </span>
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-[#1A1A1A] mb-2">
+                                앱으로 더 편하게 이용해보세요! (PWA 설치)
+                            </p>
+                            <div className="text-xs text-[#6B7280] space-y-1.5 bg-gray-50 p-2.5 rounded-lg">
+                                <p className="flex items-center gap-1.5">
+                                    <span className="font-semibold text-[#4A4A4A]">Android (Chrome):</span>
+                                    <span>브라우저 메뉴(⋮) → 앱 설치 / 홈 화면에 추가</span>
+                                </p>
+                                <p className="flex items-center gap-1.5">
+                                    <span className="font-semibold text-[#4A4A4A]">iOS (Safari):</span>
+                                    <span>공유 버튼(⎋) → 홈 화면에 추가</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

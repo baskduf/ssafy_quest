@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { cookies } from "next/headers";
@@ -12,7 +12,19 @@ export const metadata: Metadata = {
   description: "SSAFY 백준 알고리즘 랭킹 시스템",
   icons: {
     icon: "/assets/logo.png",
+    shortcut: "/assets/logo.png",
+    apple: "/assets/app_icon.png",
   },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "SSAFY Quest",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#FFFFFF",
 };
 
 async function getSession() {

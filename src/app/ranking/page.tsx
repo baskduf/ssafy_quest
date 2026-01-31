@@ -5,6 +5,9 @@ import { UserRankingTable, User } from "@/components/ranking/user-ranking-table"
 import { RandomProblems } from "@/components/random-problems";
 import { Notice } from "@/components/notice";
 import { MyClassButton } from "@/components/ranking/my-class-button";
+import { cookies } from "next/headers";
+import { getIronSession } from "iron-session";
+import { sessionOptions, SessionData } from "@/lib/session";
 
 export const revalidate = 3600;
 
@@ -31,6 +34,38 @@ export default async function RankingPage({
         orderBy: { totalPoint: "desc" },
         take: 100,
     }) as User[];
+
+    // Get user session and determine my rank
+    const cookieStore = await cookies();
+    const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
+
+    let myRankInfo: (User & { rank: number }) | undefined;
+
+    if (session.isLoggedIn && session.userId) {
+        const user = await prisma.user.findUnique({
+            where: { id: session.userId },
+        });
+
+        if (user) {
+            // Check if user matches current filter
+            const matchesFilter = (!campus || user.campus === campus) &&
+                (!classNum || user.classNum === classNum);
+
+            if (matchesFilter) {
+                const count = await prisma.user.count({
+                    where: {
+                        ...where,
+                        totalPoint: { gt: user.totalPoint },
+                    },
+                });
+
+                myRankInfo = {
+                    ...user,
+                    rank: count + 1,
+                } as unknown as (User & { rank: number });
+            }
+        }
+    }
 
 
     const totalUsers = await prisma.user.count();
@@ -173,7 +208,7 @@ export default async function RankingPage({
 
             {/* Table */}
             <section className="max-w-4xl mx-auto px-3 sm:px-4 py-4">
-                <UserRankingTable users={users} />
+                <UserRankingTable users={users} myRankInfo={myRankInfo} />
             </section>
         </div>
     );

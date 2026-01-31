@@ -13,14 +13,13 @@ export async function POST(request: Request) {
     }
 
     try {
-        // 모든 사용자를 점수 순으로 조회
+        const now = new Date();
+
+        // 1. User Ranking Update
         const users = await prisma.user.findMany({
             orderBy: { totalPoint: "desc" },
             select: { id: true, totalPoint: true },
         });
-
-        // 현재 순위 계산 및 이전 순위로 저장
-        const now = new Date();
 
         for (let i = 0; i < users.length; i++) {
             const currentRank = i + 1;
@@ -33,9 +32,39 @@ export async function POST(request: Request) {
             });
         }
 
+        // 2. Class Ranking Update
+        const classStatsRaw = await prisma.user.groupBy({
+            by: ["campus", "classNum"],
+            _sum: { totalPoint: true },
+            orderBy: { _sum: { totalPoint: "desc" } },
+        });
+
+        for (let i = 0; i < classStatsRaw.length; i++) {
+            const stat = classStatsRaw[i];
+            const currentRank = i + 1;
+
+            await prisma.classRanking.upsert({
+                where: {
+                    campus_classNum: {
+                        campus: stat.campus,
+                        classNum: stat.classNum,
+                    },
+                },
+                update: {
+                    previousRank: currentRank,
+                    updatedAt: now,
+                },
+                create: {
+                    campus: stat.campus,
+                    classNum: stat.classNum,
+                    previousRank: currentRank,
+                },
+            });
+        }
+
         return NextResponse.json({
             success: true,
-            message: `Updated ranks for ${users.length} users`,
+            message: `Updated ranks for ${users.length} users and ${classStatsRaw.length} classes`,
             updatedAt: now.toISOString(),
         });
     } catch (error) {

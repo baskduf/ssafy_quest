@@ -63,3 +63,13 @@ model DailyProblem {
   createdAt DateTime @default(now())
   problems  String
 }
+
+model ClassRanking {
+  id           String   @id @default(cuid())
+  campus       String
+  classNum     Int
+  previousRank Int?
+  updatedAt    DateTime @updatedAt
+
+  @@unique([campus, classNum])
+}

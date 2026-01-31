@@ -25,6 +25,7 @@ export interface User {
 
 interface UserRankingTableProps {
     users: User[];
+    myRankInfo?: User & { rank: number };
 }
 
 function RankChange({
@@ -52,7 +53,7 @@ function RankChange({
     return <span className="text-[10px] text-[#9CA3AF] ml-0.5">-</span>;
 }
 
-export function UserRankingTable({ users }: UserRankingTableProps) {
+export function UserRankingTable({ users, myRankInfo }: UserRankingTableProps) {
     if (users.length === 0) {
         return (
             <div className="bg-white rounded-lg border border-[#E2E8F0] p-8 text-center">
@@ -84,12 +85,50 @@ export function UserRankingTable({ users }: UserRankingTableProps) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
+                    {myRankInfo && (
+                        <TableRow
+                            className="bg-blue-50 border-b-2 border-blue-100 hover:bg-blue-50 transition-colors"
+                        >
+                            <TableCell className="py-2.5 px-2 whitespace-nowrap">
+                                <span className="font-semibold text-xs text-[#3282F6]">
+                                    {myRankInfo.rank}
+                                </span>
+                                <RankChange
+                                    currentRank={myRankInfo.rank}
+                                    previousRank={myRankInfo.previousRank}
+                                />
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 whitespace-nowrap w-[23%] overflow-hidden">
+                                <Link
+                                    href={`/profile/${myRankInfo.bojHandle}`}
+                                    className="hover:text-[#3282F6] block truncate"
+                                >
+                                    <div className="font-medium text-[#1A1A1A] text-xs sm:text-sm truncate">
+                                        {myRankInfo.name}
+                                        <span className="ml-1 text-[10px] sm:text-xs text-[#3282F6] font-normal">(나)</span>
+                                    </div>
+                                    <div className="text-[10px] sm:text-xs text-[#9CA3AF] truncate">
+                                        {myRankInfo.campus} {myRankInfo.classNum}반
+                                    </div>
+                                </Link>
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 text-xs text-[#4A4A4A] whitespace-nowrap">
+                                <TierBadge tier={myRankInfo.tier} size="sm" />
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 text-left text-xs text-[#4A4A4A] whitespace-nowrap">
+                                {myRankInfo.solvedCount}
+                            </TableCell>
+                            <TableCell className="py-2.5 px-2 text-left font-semibold text-[#1A1A1A] text-xs sm:text-sm whitespace-nowrap">
+                                {myRankInfo.totalPoint.toLocaleString()}
+                            </TableCell>
+                        </TableRow>
+                    )}
                     {users.map((user: User, index: number) => {
                         const currentRank = index + 1;
                         return (
                             <TableRow
                                 key={user.id}
-                                className="border-t border-[#EEEEEE] hover:bg-[#F8F9FA] transition-colors"
+                                className={`border-t border-[#EEEEEE] hover:bg-[#F8F9FA] transition-colors ${myRankInfo?.id === user.id ? "bg-blue-50/30" : ""}`}
                             >
                                 <TableCell className="py-2.5 px-2 whitespace-nowrap">
                                     <span
