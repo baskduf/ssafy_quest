@@ -32,6 +32,7 @@ model User {
   initialTier        Int             @default(0)
   badges             Badge[]
   seasonHistory      SeasonHistory[]
+  raidParticipations RaidParticipation[]
 }
 
 model SeasonHistory {
@@ -72,4 +73,48 @@ model ClassRanking {
   updatedAt    DateTime @updatedAt
 
   @@unique([campus, classNum])
+}
+
+// ==================== Raid System ====================
+
+enum RaidStatus {
+  READY
+  ACTIVE
+  SUCCESS
+  FAIL
+}
+
+model Raid {
+  id            String     @id @default(cuid())
+  title         String
+  description   String?
+  imageUrl      String?
+  problemId     Int
+  maxHp         Int
+  currentHp     Int
+  damagePerHit  Int        @default(1)
+  bonusPoint    Int        @default(0)
+  status        RaidStatus @default(READY)
+  startAt       DateTime
+  endAt         DateTime
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  participations RaidParticipation[]
+}
+
+model RaidParticipation {
+  id            String    @id @default(cuid())
+  raidId        String
+  userId        String
+  isSolved      Boolean   @default(false)
+  solvedAt      DateTime?
+  lastAttemptAt DateTime?
+  pointAwarded  Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+  raid Raid @relation(fields: [raidId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([raidId, userId])
 }

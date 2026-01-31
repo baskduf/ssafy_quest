@@ -13,10 +13,20 @@ interface ChartData {
     solved: number;
 }
 
+interface RaidBadge {
+    id: string;
+    raid: {
+        id: string;
+        title: string;
+        imageUrl: string | null;
+    };
+}
+
 interface ProfileViewProps {
     user: User & { badges: Badge[] };
     chartData: ChartData[];
     earnedBadges: { name: string; description: string; type: string; earned: boolean }[];
+    raidBadges?: RaidBadge[];
     rankInfo: {
         text: string;
         rank: number;
@@ -25,7 +35,7 @@ interface ProfileViewProps {
     isMyPage?: boolean;
 }
 
-export function ProfileView({ user, chartData, earnedBadges, rankInfo, isMyPage = false }: ProfileViewProps) {
+export function ProfileView({ user, chartData, earnedBadges, raidBadges = [], rankInfo, isMyPage = false }: ProfileViewProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({
         name: user.name,
@@ -232,6 +242,37 @@ export function ProfileView({ user, chartData, earnedBadges, rankInfo, isMyPage 
                                     <div className="font-medium text-[#1A1A1A] mb-1 text-sm">{badge.name.replace(/^\S+\s/, '')}</div>
                                     <div className="text-xs text-[#9CA3AF]">{badge.description}</div>
                                 </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Raid Badges */}
+            {raidBadges.length > 0 && (
+                <section className="max-w-4xl mx-auto px-4 pb-6">
+                    <div className="bg-white rounded-lg border border-[#E2E8F0] p-4 sm:p-6">
+                        <h2 className="text-base sm:text-lg font-semibold text-[#1A1A1A] mb-4">레이드 클리어</h2>
+                        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+                            {raidBadges.map((rb) => (
+                                <Link
+                                    key={rb.id}
+                                    href={`/raid/${rb.raid.id}`}
+                                    className="flex flex-col items-center p-2 border border-[#E2E8F0] rounded-lg hover:border-[#3282F6] hover:shadow-sm transition-all"
+                                >
+                                    {rb.raid.imageUrl ? (
+                                        <img
+                                            src={rb.raid.imageUrl}
+                                            alt={rb.raid.title}
+                                            className="w-12 h-12 rounded-lg object-cover mb-2"
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-lg bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF] mb-2">
+                                            👹
+                                        </div>
+                                    )}
+                                    <span className="text-xs text-[#4A4A4A] text-center truncate w-full">{rb.raid.title}</span>
+                                </Link>
                             ))}
                         </div>
                     </div>

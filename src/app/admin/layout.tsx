@@ -48,6 +48,12 @@ export default async function AdminLayout({
                                     Users
                                 </Link>
                                 <Link
+                                    href="/admin/raids"
+                                    className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                                >
+                                    Raids
+                                </Link>
+                                <Link
                                     href="/admin/system"
                                     className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
                                 >

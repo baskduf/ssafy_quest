@@ -65,11 +65,26 @@ export default async function MyPage() {
         total: classTotal
     };
 
+    // Raid badges - successful raids with boss images
+    const raidBadges = await prisma.raidParticipation.findMany({
+        where: {
+            userId: user.id,
+            isSolved: true,
+            raid: { status: 'SUCCESS' }
+        },
+        include: {
+            raid: {
+                select: { id: true, title: true, imageUrl: true }
+            }
+        }
+    });
+
     return (
         <ProfileView
             user={user}
             chartData={chartData}
             earnedBadges={earnedBadges}
+            raidBadges={raidBadges}
             rankInfo={rankInfo}
             isMyPage={true}
         />

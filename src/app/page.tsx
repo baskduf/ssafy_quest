@@ -9,6 +9,7 @@ import { sessionOptions, SessionData } from "@/lib/session";
 import { ClassRankingTable, ClassStat } from "@/components/ranking/class-ranking-table";
 import { RandomProblems } from "@/components/random-problems";
 import { MyClassButton } from "@/components/ranking/my-class-button";
+import { ActiveRaidSection } from "@/components/active-raid-section";
 
 import { Notice } from "@/components/notice";
 
@@ -29,7 +30,7 @@ export default async function HomePage({
   const totalUsers = await prisma.user.count();
 
   // Get class rankings
-  const [classStatsRaw, classRankingHistory] = await Promise.all([
+  const [classStatsRaw, classRankingHistory, activeRaids] = await Promise.all([
     prisma.user.groupBy({
       by: ["campus", "classNum"],
       _sum: { totalPoint: true },
@@ -40,6 +41,14 @@ export default async function HomePage({
     }),
     prisma.classRanking.findMany({
       where: params.campus ? { campus: params.campus } : undefined,
+    }),
+    prisma.raid.findMany({
+      where: { status: 'ACTIVE' },
+      orderBy: { createdAt: 'desc' },
+      take: 2,
+      include: {
+        _count: { select: { participations: true } }
+      }
     })
   ]);
 
@@ -119,6 +128,7 @@ export default async function HomePage({
           </div>
 
           <Notice />
+          <ActiveRaidSection raids={activeRaids} />
           <RandomProblems />
         </div>
       </section >

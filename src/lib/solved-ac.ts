@@ -149,3 +149,59 @@ export async function fetchRandomProblems(count: number = 10) {
 }
 
 
+/**
+ * 특정 사용자가 특정 문제를 풀었는지 확인
+ * @param bojHandle 백준 핸들
+ * @param problemId 문제 번호
+ * @returns 풀었으면 true, 아니면 false
+ */
+export async function checkProblemSolved(bojHandle: string, problemId: number): Promise<boolean> {
+    try {
+        const response = await fetch(
+            `${SOLVED_AC_API}/search/problem?query=solved_by:${encodeURIComponent(bojHandle)}+id:${problemId}`,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                },
+                cache: 'no-store', // 실시간 검증 필요
+            }
+        );
+
+        if (!response.ok) {
+            console.error(`Solved.ac API error: ${response.status}`);
+            return false;
+        }
+
+        const data = await response.json();
+        return data.count === 1;
+    } catch (error) {
+        console.error('Failed to check problem solved:', error);
+        throw new Error('백준 데이터를 가져올 수 없습니다.');
+    }
+}
+
+/**
+ * 문제 정보 가져오기
+ */
+export async function fetchProblemInfo(problemId: number) {
+    try {
+        const response = await fetch(
+            `${SOLVED_AC_API}/problem/show?problemId=${problemId}`,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                },
+                next: { revalidate: 3600 },
+            }
+        );
+
+        if (!response.ok) {
+            return null;
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch problem info:', error);
+        return null;
+    }
+}
