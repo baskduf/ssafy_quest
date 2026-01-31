@@ -47,6 +47,7 @@ export async function POST(request: Request) {
 
             session.userId = existingUser.id;
             session.bojHandle = existingUser.bojHandle;
+            session.ssafyId = existingUser.ssafyId;
             session.name = existingUser.name;
             session.campus = existingUser.campus;
             session.classNum = existingUser.classNum;

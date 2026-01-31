@@ -117,15 +117,18 @@ export function getTierColor(tier: number): string {
 }
 
 /**
- * 랜덤 문제 가져오기 (브실골, 5문제)
+ * 랜덤 문제 가져오기 (브실골)
  */
-export async function fetchRandomProblems(count: number = 5) {
+export async function fetchRandomProblems(count: number = 10) {
     try {
+        // 랜덤 페이지 선택 (1~100)
+        const randomPage = Math.floor(Math.random() * 100) + 1;
+
         // tier:6..15 (Silver 5 ~ Gold 1), solvable:true
         const response = await fetch(
-            `https://solved.ac/api/v3/search/problem?query=tier:6..15+solvable:true+sort:random+lang:ko&direction=asc&page=1`,
+            `https://solved.ac/api/v3/search/problem?query=tier:6..15+solvable:true+lang:ko&direction=asc&page=${randomPage}`,
             {
-                next: { revalidate: 0 } // Always fresh random
+                cache: 'no-store' // 캐시 비활성화
             }
         );
 
@@ -134,7 +137,11 @@ export async function fetchRandomProblems(count: number = 5) {
         }
 
         const data = await response.json();
-        return (data.items || []).slice(0, count);
+        const items = data.items || [];
+
+        // 결과를 셔플하고 count개 반환
+        const shuffled = items.sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, count);
     } catch (error) {
         console.error("Error fetching random problems:", error);
         return [];

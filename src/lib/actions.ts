@@ -39,6 +39,10 @@ export async function login(ssafyId: string, ssafyPwd: string) {
 
         session.userId = existingUser.id;
         session.bojHandle = existingUser.bojHandle;
+        session.ssafyId = existingUser.ssafyId;
+        session.name = existingUser.name;
+        session.campus = existingUser.campus;
+        session.classNum = existingUser.classNum;
         session.isLoggedIn = true;
 
         await session.save();
@@ -122,6 +126,10 @@ export async function register(
 
     session.userId = user.id;
     session.bojHandle = user.bojHandle;
+    session.ssafyId = user.ssafyId;
+    session.name = user.name;
+    session.campus = user.campus;
+    session.classNum = user.classNum;
     session.isLoggedIn = true;
 
     await session.save();

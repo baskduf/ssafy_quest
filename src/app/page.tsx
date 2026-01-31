@@ -68,12 +68,22 @@ export default async function HomePage({
             * 랭킹과 문제는 매일 자정(00시)에 업데이트 됩니다.
           </p>
 
+          <div className="mt-6 flex flex-col items-center gap-2 animate-fade-in-up">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#ec9a00] text-white text-xs font-bold rounded-full shadow-sm border border-[#d68b00]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <span>Season 1</span>
+            </div>
+            <div className="text-[10px] sm:text-xs text-[#9CA3AF] bg-[#F3F4F6] px-3 py-1.5 rounded-md border border-[#E5E7EB] mt-1">
+              <span className="font-semibold text-[#4B5563]">점수 산정:</span> (이번 달 푼 문제 × 50) + (티어 성장 점수)
+            </div>
+          </div>
+
           <RandomProblems />
         </div>
-      </section>
+      </section >
 
       {/* Tabs */}
-      <section className="bg-white border-b border-[#E2E8F0]">
+      < section className="bg-white border-b border-[#E2E8F0]" >
         <div className="max-w-4xl mx-auto px-3 sm:px-4">
           <div className="flex gap-4">
             <Link
@@ -91,10 +101,10 @@ export default async function HomePage({
             <MyClassButton />
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Filters */}
-      <section className="bg-white border-b border-[#E2E8F0]">
+      < section className="bg-white border-b border-[#E2E8F0]" >
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3">
           <div className="flex flex-wrap items-center gap-1.5">
             <Link
@@ -120,12 +130,12 @@ export default async function HomePage({
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Table */}
-      <section className="max-w-4xl mx-auto px-3 sm:px-4 py-4">
+      < section className="max-w-4xl mx-auto px-3 sm:px-4 py-4" >
         <ClassRankingTable statistics={classStats} />
-      </section>
-    </div>
+      </section >
+    </div >
   );
 }

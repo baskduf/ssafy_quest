@@ -66,19 +66,19 @@ export function UserRankingTable({ users }: UserRankingTableProps) {
             <Table className="table-fixed w-full">
                 <TableHeader className="bg-[#F8F9FA]">
                     <TableRow className="border-b border-[#E2E8F0] hover:bg-transparent">
-                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[10%]">
+                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[12%]">
                             순위
                         </TableHead>
-                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[35%]">
+                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[22%]">
                             이름
                         </TableHead>
-                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[15%]">
+                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[22%]">
                             티어
                         </TableHead>
-                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[20%]">
+                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[19%]">
                             해결
                         </TableHead>
-                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[20%]">
+                        <TableHead className="text-left font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[25%]">
                             점수
                         </TableHead>
                     </TableRow>
@@ -103,7 +103,7 @@ export function UserRankingTable({ users }: UserRankingTableProps) {
                                         previousRank={user.previousRank}
                                     />
                                 </TableCell>
-                                <TableCell className="py-2.5 px-2 whitespace-nowrap w-[35%] overflow-hidden">
+                                <TableCell className="py-2.5 px-2 whitespace-nowrap w-[22%] overflow-hidden">
                                     <Link
                                         href={`/profile/${user.bojHandle}`}
                                         className="hover:text-[#3282F6] block truncate"

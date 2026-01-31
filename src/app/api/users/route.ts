@@ -97,6 +97,10 @@ export async function POST(request: Request) {
         const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
         session.userId = user.id;
         session.bojHandle = user.bojHandle;
+        session.ssafyId = user.ssafyId;
+        session.name = user.name;
+        session.campus = user.campus;
+        session.classNum = user.classNum;
         session.isLoggedIn = true;
         await session.save();
 

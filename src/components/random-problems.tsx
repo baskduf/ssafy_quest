@@ -1,8 +1,12 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { fetchRandomProblems } from "@/lib/solved-ac";
 import { ProblemCarousel } from "@/components/problem-carousel";
 
 export async function RandomProblems() {
+    // 캐시 비활성화 - 항상 최신 데이터 조회
+    noStore();
+
     // DB에서 최신 데이터 조회
     const daily = await prisma.dailyProblem.findFirst({
         orderBy: { createdAt: 'desc' }

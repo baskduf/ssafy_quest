@@ -34,19 +34,19 @@ export function ClassRankingTable({ statistics }: ClassRankingTableProps) {
             <Table className="table-fixed w-full">
                 <TableHeader className="bg-[#F8F9FA]">
                     <TableRow className="border-b border-[#E2E8F0] hover:bg-transparent">
-                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[10%]">
+                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[12%]">
                             순위
                         </TableHead>
-                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[35%]">
+                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[23%]">
                             반
                         </TableHead>
                         <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[15%]">
                             인원
                         </TableHead>
-                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[20%]">
+                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[25%]">
                             평균
                         </TableHead>
-                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[20%]">
+                        <TableHead className="text-left text-xs font-medium text-[#9CA3AF] py-2.5 px-2 whitespace-nowrap h-auto w-[25%]">
                             총점
                         </TableHead>
                     </TableRow>
